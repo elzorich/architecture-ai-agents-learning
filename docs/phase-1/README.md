@@ -105,15 +105,11 @@ erDiagram
 
 **Core business rules**
 
-- Room capacity must be a positive whole number.
 - A booking must reference an existing user and room.
 - `start_time` must be earlier than `end_time`; both represent unambiguous
   instants, with a consistent timezone convention.
 - Creating or rescheduling a booking requires an active room and no overlap
   with another confirmed booking for that room.
-- Booking intervals include the start and exclude the end, so one booking
-  can start exactly when another ends. Cancelled bookings do not block
-  availability.
 - Employees can view, edit, and cancel their own bookings. Administrators can
   manage all bookings and maintain room information and status.
 
