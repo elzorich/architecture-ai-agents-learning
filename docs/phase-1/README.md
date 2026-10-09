@@ -1,10 +1,5 @@
 # Phase 1: Problem Framing
 
-> Status: Draft to be completed and reviewed with the mentor.
-
-Use this template to think through the problem before making technology or
-architecture decisions. Keep the final result concise enough to fit on roughly
-one page, with the domain diagram stored separately if needed.
 
 ## 1. Problem statement
 
@@ -17,7 +12,7 @@ Answer in two or three sentences:
 
 **Draft:**
 
-<!-- Write your problem statement here. -->
+Internal meeting-room booking for one organisation.
 
 ## 2. Goal
 
@@ -26,7 +21,10 @@ solution.
 
 **Draft:**
 
-<!-- Write the system goal here. -->
+Employees need simple way to find available meeting rooms 
+and reserve them for specific time. 
+The system must prevent conflicting bookings and allow employees to view, edit and cancel their reservations.
+Administrators need to maintain room information, manage room availability.
 
 ## 3. Actors
 
@@ -34,38 +32,33 @@ For each actor, describe their responsibility and what they need from the
 system.
 
 | Actor | Responsibility | Main need |
-| --- | --- | --- |
-|  |  |  |
+| Employee | View rooms & add/manage their own bookings | --- |
+| Administrator | Has all employees roles & manages rooms and all bookings |  |
 
 ## 4. Main use cases
 
 Write short user-focused actions, for example: “View available resources.”
 
-1. 
-2. 
-3. 
-4. 
-5. 
+1. View rooms and availability for selected date and time range
+2. Booking a space for one person or group of people (select date&time -> system confirms booking)
+3. View & cancel own booking
+4. Admin - create rooms, edit (name, location, capacity). Change rooms status.
+5. Admin - manage all bookings.
 
 ## 5. Functional requirements
 
 Describe what the system must do. Use clear, testable statements beginning
 with “The system shall...”
 
-- [ ] 
-- [ ] 
-- [ ] 
+- User accesss and permissions 
+- Display available rooms for specific date&time range
+- Booking creation (date&time validation, prevent overlapping bookings)
+- Confirm booking creation
+- View & cancel own bookings
+- Admin: CRUD rooms & bookings
 
-## 6. Business rules
 
-Describe rules that must always remain true, independent of the interface or
-technology.
-
-- 
-- 
-- 
-
-## 7. Non-functional requirements
+## 6. Non-functional requirements
 
 Record only requirements that matter to the first slice. Avoid inventing scale
 or performance targets without a reason.
@@ -77,53 +70,9 @@ or performance targets without a reason.
 | Performance |  |  |
 | Usability |  |  |
 
-## 8. MVP scope
+## 7. Domain model
 
-### In scope
-
-- 
-- 
-- 
-
-### Out of scope
-
-- 
-- 
-- 
-
-## 9. Assumptions and constraints
-
-Separate current assumptions from confirmed facts so they can be challenged
-during the mentor discussion.
-
-| Item | Type | Validation needed |
-| --- | --- | --- |
-|  | Assumption / constraint |  |
-
-## 10. Domain model
-
-List the main domain concepts before drawing relationships.
-
-| Concept | Meaning | Important attributes |
-| --- | --- | --- |
-|  |  |  |
-
-Add the resulting diagram to [`../../diagrams`](../../diagrams/README.md) and
-link it here.
-
-## 11. Open questions for mentor review
-
-- 
-- 
-- 
-
-## Phase 1 completion checklist
-
-- [ ] The problem is described without prescribing a solution.
-- [ ] Every MVP feature supports a defined use case.
-- [ ] Business rules are testable and deterministic where required.
-- [ ] In-scope and out-of-scope items are explicit.
-- [ ] Assumptions are separated from confirmed requirements.
-- [ ] The domain model uses business language rather than framework terms.
-- [ ] Open questions are ready for the mentor session.
+User {id, name, email, role}
+Room {id, name, location, capacity, status}
+Booking {id, user_id, room_id, start_time, end_time, status}
 
