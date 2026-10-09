@@ -72,7 +72,48 @@ or performance targets without a reason.
 
 ## 7. Domain model
 
-User {id, name, email, role}
-Room {id, name, location, capacity, status}
-Booking {id, user_id, room_id, start_time, end_time, status}
+
+| Entity | Purpose | Attributes |
+| --- | --- | --- |
+| User | An employee or administrator who uses the system. | `id`, `name`, `email`, `role` |
+| Room | A meeting room that can be reserved. | `id`, `name`, `location`, `capacity`, `status` |
+| Booking | A reservation of one room by one user for a specific time range. | `id`, `user_id`, `room_id`, `start_time`, `end_time`, `status` |
+
+**Relationships**
+
+```mermaid
+erDiagram
+    USER ||--o{ BOOKING : owns
+    ROOM ||--o{ BOOKING : has
+```
+
+- A user can own many bookings; each booking belongs to exactly one user.
+- A room can have many bookings; each booking reserves exactly one room.
+- `user_id` identifies the booking owner, including when an administrator
+  manages the booking on their behalf.
+
+**Roles and statuses**
+
+- User role: `employee` or `administrator`. Administrators also have employee
+  permissions.
+- Room status: `active` (accepts bookings) or `inactive` (unavailable for new
+  bookings). Availability for a time range is calculated from room status and
+  existing bookings; it is not a stored room status.
+- Booking status: `confirmed` or `cancelled`. A valid booking is confirmed
+  immediately; cancellation preserves the reservation record and releases
+  its time range.
+
+**Core business rules**
+
+- Room capacity must be a positive whole number.
+- A booking must reference an existing user and room.
+- `start_time` must be earlier than `end_time`; both represent unambiguous
+  instants, with a consistent timezone convention.
+- Creating or rescheduling a booking requires an active room and no overlap
+  with another confirmed booking for that room.
+- Booking intervals include the start and exclude the end, so one booking
+  can start exactly when another ends. Cancelled bookings do not block
+  availability.
+- Employees can view, edit, and cancel their own bookings. Administrators can
+  manage all bookings and maintain room information and status.
 
