@@ -1,115 +1,89 @@
-# Phase 1: Problem Framing
+# Phase 1: Meeting Room Booking — Problem Framing
 
+## 1. Problem
 
-## 1. Problem statement
+Employees in a company with offices in different cities and countries need to
+reserve meeting rooms.
 
-Answer in two or three sentences:
-
-- Who experiences the problem?
-- What are they trying to accomplish?
-- What difficulty exists today?
-- Why is solving it useful?
-
-**Draft:**
-
-Internal meeting-room booking for one organisation.
+They need a reliable way to find a room that is available at the required
+time, has enough capacity, and provides the necessary equipment. The system
+should select the employee's current office building by default while still
+allowing them to search in another company location. Unclear availability or
+room information may lead to wasted time and booking conflicts.
 
 ## 2. Goal
 
-Describe the outcome the system should enable. Avoid describing a technical
-solution.
-
-**Draft:**
-
-Employees need simple way to find available meeting rooms 
-and reserve them for specific time. 
-The system must prevent conflicting bookings and allow employees to view, edit and cancel their reservations.
-Administrators need to maintain room information, manage room availability.
+Enable an employee to find and reserve a suitable meeting room at their current
+office or another selected company location.
 
 ## 3. Actors
 
-For each actor, describe their responsibility and what they need from the
-system.
+| Actor | Main responsibility |
+| --- | --- |
+| Employee | Search, create, view, and cancel their own bookings |
+| Administrator | Maintain locations, rooms, and equipment information |
 
-| Actor | Responsibility | Main need |
-| Employee | View rooms & add/manage their own bookings | --- |
-| Administrator | Has all employees roles & manages rooms and all bookings |  |
+## 4. Example scenario
 
-## 4. Main use cases
+> Marco searches for a room in the Berlin office for 6 people, on a selected
+> date from 10:00 to 16:00 Berlin time, with a TV and whiteboard.
 
-Write short user-focused actions, for example: “View available resources.”
+## 5. Main functional requirements
 
-1. View rooms and availability for selected date and time range
-2. Booking a space for one person or group of people (select date&time -> system confirms booking)
-3. View & cancel own booking
-4. Admin - create rooms, edit (name, location, capacity). Change rooms status.
-5. Admin - manage all bookings.
+- The system selects the employee's current office building by default.
+- The employee can select another company location.
+- The employee can select a date and time.
+- The employee can enter the number of participants.
+- The employee can select required equipment.
+- The system shows rooms that are available and satisfy all selected criteria.
+- The employee can create, view, and cancel their own future bookings.
+- The administrator can manage locations, rooms, and room equipment.
 
-## 5. Functional requirements
+## 6. Business rules
 
-Describe what the system must do. Use clear, testable statements beginning
-with “The system shall...”
+- A booking must have a start time earlier than its end time.
+- A room cannot have overlapping confirmed bookings.
+- The room capacity must be equal to or greater than the number of participants.
+- The room must have all requested equipment in working condition.
+- Only active rooms can be booked.
+- The employee's current office building is the default search location, but it
+  can be changed.
+- The location and time zone must be shown before confirmation.
 
-- User accesss and permissions 
-- Display available rooms for specific date&time range
-- Booking creation (date&time validation, prevent overlapping bookings)
-- Confirm booking creation
-- View & cancel own bookings
-- Admin: CRUD rooms & bookings
+## 7. Non-functional requirements
 
+| Quality | Initial requirement |
+| --- | --- |
+| Security | Only authenticated company users can access the application. |
+| Authorization | Only administrators can manage rooms, locations, and equipment. |
+| Reliability | The system must prevent double booking, including simultaneous requests. |
+| Performance | Search results should normally appear within two seconds. |
+| Usability | An employee should be able to make a basic booking without training. |
 
-## 6. Non-functional requirements
+## 8. Basic domain model
 
-Record only requirements that matter to the first slice. Avoid inventing scale
-or performance targets without a reason.
+| Concept | Meaning |
+| --- | --- |
+| User | An employee or administrator; an employee has a default office location |
+| Location | A company office in a particular city, country, and time zone |
+| Room | A bookable meeting room belonging to one location |
+| Equipment | Equipment belonging to a room, such as a TV or whiteboard |
+| Booking | A reservation connecting one user, one room, and one time period |
 
-| Quality | Requirement | Why it matters |
-| --- | --- | --- |
-| Security |  |  |
-| Reliability |  |  |
-| Performance |  |  |
-| Usability |  |  |
+## 9. MVP scope
 
-## 7. Domain model
+### In scope
 
+- One company with multiple locations
+- The employee's current office building selected by default
+- Room search by location, date, time, capacity, and equipment
+- Create, view, and cancel booking
+- Basic room and equipment administration
+- TV and whiteboard as initial equipment types
 
-| Entity | Purpose | Attributes |
-| --- | --- | --- |
-| User | An employee or administrator who uses the system. | `id`, `name`, `email`, `role` |
-| Room | A meeting room that can be reserved. | `id`, `name`, `location`, `capacity`, `status` |
-| Booking | A reservation of one room by one user for a specific time range. | `id`, `user_id`, `room_id`, `start_time`, `end_time`, `status` |
+### Out of scope
 
-**Relationships**
-
-```mermaid
-erDiagram
-    USER ||--o{ BOOKING : owns
-    ROOM ||--o{ BOOKING : has
-```
-
-- A user can own many bookings; each booking belongs to exactly one user.
-- A room can have many bookings; each booking reserves exactly one room.
-- `user_id` identifies the booking owner, including when an administrator
-  manages the booking on their behalf.
-
-**Roles and statuses**
-
-- User role: `employee` or `administrator`. Administrators also have employee
-  permissions.
-- Room status: `active` (accepts bookings) or `inactive` (unavailable for new
-  bookings). Availability for a time range is calculated from room status and
-  existing bookings; it is not a stored room status.
-- Booking status: `confirmed` or `cancelled`. A valid booking is confirmed
-  immediately; cancellation preserves the reservation record and releases
-  its time range.
-
-**Core business rules**
-
-- A booking must reference an existing user and room.
-- `start_time` must be earlier than `end_time`; both represent unambiguous
-  instants, with a consistent timezone convention.
-- Creating or rescheduling a booking requires an active room and no overlap
-  with another confirmed booking for that room.
-- Employees can view, edit, and cancel their own bookings. Administrators can
-  manage all bookings and maintain room information and status.
-
+- Recurring bookings
+- Outlook or Google Calendar integration
+- Catering and visitor management
+- Multiple independent companies
